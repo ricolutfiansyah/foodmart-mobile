@@ -1,0 +1,1 @@
+export const BASE_URL = 'https://blaming-reversing-attribute.ngrok-free.dev/api/v1';
