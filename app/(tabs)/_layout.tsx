@@ -1,16 +1,17 @@
 import { Tabs } from "expo-router";
 import { Text } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#6C6FF",
-        tabBarInactiveTintColor: "#999",
+        tabBarActiveTintColor: "#10b981",
+        tabBarInactiveTintColor: "#94a3b8",
         tabBarStyle: {
           backgroundColor: "#fff",
-          borderTopWidth: 2,
-          borderTopColor: "#eee",
+          borderTopWidth: 1,
+          borderTopColor: "#e5e7eb",
         },
         headerShown: false,
       }}
@@ -19,14 +20,22 @@ export default function TabLayout() {
         name="home"
         options={{
           title: "Home",
-          tabBarIcon: ({ color }) => <Text>🛖</Text>,
+          tabBarIcon: ({ color }) => <Ionicons name="home" size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="order"
+        options={{
+          href: null,
+          title: "Order",
+          tabBarIcon: ({ color }) => <Text>📦</Text>,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color }) => <Text>⚙️</Text>,
+          tabBarIcon: ({ color }) => <Ionicons name="person" color={color} size={24} />,
         }}
       />
     </Tabs>

@@ -3,6 +3,9 @@ import { useState } from "react";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/src/hooks/useAuth";
 import { formatFieldErrors } from "@/src/utils/formatErrors";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { getErrorMessage } from "@/src/types/api";
+import { Ionicons } from '@expo/vector-icons';
 
 export default function LoginScreen() {
     const router = useRouter();
@@ -17,82 +20,89 @@ export default function LoginScreen() {
     }
 
     const fieldErrors = formatFieldErrors(loginErrors?.response?.data?.errors);
-    return (
-        <KeyboardAvoidingView
-            style={styles.flex}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        >
-            <ScrollView
-                contentContainerStyle={styles.container}
-                keyboardShouldPersistTaps="handled"
-            >
+    const generalErrorMessage = (loginErrors?.response?.status === 401 || (loginErrors?.response?.status === 400 && Object.keys(fieldErrors).length === 0))
+        ? getErrorMessage(loginErrors)
+        : null;
 
-                <View style={styles.header}>
-                    <Text style={styles.emoji}>🍔</Text>
-                    <Text style={styles.title}>Selamat Datang!</Text>
-                    <Text style={styles.subtitle}>Login dulu yuks buat pesan makanan</Text>
+    return (
+        <KeyboardAwareScrollView
+            style={styles.flex}
+            contentContainerStyle={styles.container}
+            keyboardShouldPersistTaps="handled"
+            enableOnAndroid={true}
+        >
+
+            <View style={styles.header}>
+                <Text style={styles.emoji}>🍔</Text>
+                <Text style={styles.title}>Selamat Datang!</Text>
+                <Text style={styles.subtitle}>Login dulu yuks buat pesan makanan</Text>
+            </View>
+
+            <View style={styles.form}>
+
+                {generalErrorMessage && (
+                    <View style={styles.generalError}>
+                        <Text style={styles.generalErrorText}>{generalErrorMessage}</Text>
+                    </View>
+                )}
+
+                <View style={styles.inputGroup}>
+                    <Text style={styles.label}>Email</Text>
+                    <TextInput
+                        style={[styles.input, fieldErrors?.email && styles.inputError]}
+                        placeholder="email@example.com"
+                        placeholderTextColor='#999'
+                        value={email}
+                        onChangeText={setEmail}
+                        keyboardType="email-address"
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                    />
+                    {fieldErrors?.email && (
+                        <Text style={styles.fieldError}>{fieldErrors.email}</Text>
+                    )}
                 </View>
 
-                <View style={styles.form}>
-
-                    <View style={styles.inputGroup}>
-                        <Text style={styles.label}>Email</Text>
+                <View style={styles.inputGroup}>
+                    <Text style={styles.label}>Password</Text>
+                    <View style={[styles.passwordWrapper, fieldErrors?.password && styles.inputError]}>
                         <TextInput
-                            style={[styles.input, fieldErrors?.email && styles.inputError]}
-                            placeholder="email@example.com"
+                            style={[styles.passwordInput, fieldErrors?.password && styles.inputError]}
+                            placeholder="Masukkan password"
                             placeholderTextColor='#999'
-                            value={email}
-                            onChangeText={setEmail}
-                            keyboardType="email-address"
+                            value={password}
+                            onChangeText={setPassword}
+                            secureTextEntry={!showPassword}
                             autoCapitalize="none"
-                            autoCorrect={false}
                         />
-                        {fieldErrors?.email && (
-                            <Text style={styles.fieldError}>{fieldErrors.email}</Text>
-                        )}
-                    </View>
-
-                    <View style={styles.inputGroup}>
-                        <Text style={styles.label}>Password</Text>
-                        <View style={[styles.passwordWrapper, fieldErrors?.password && styles.inputError]}>
-                            <TextInput
-                                style={[styles.passwordInput, fieldErrors?.password && styles.inputError]}
-                                placeholder="Masukkan password"
-                                placeholderTextColor='#999'
-                                value={password}
-                                onChangeText={setPassword}
-                                secureTextEntry={!showPassword}
-                                autoCapitalize="none"
-                            />
-                            <Pressable onPress={() => setShowPassword(!showPassword)}>
-                                <Text style={styles.showText}>
-                                    {showPassword ? 'Hide' : 'Show'}
-                                </Text>
-                            </Pressable>
-                        </View>
-                        {fieldErrors?.password && (
-                            <Text style={styles.fieldError}>{fieldErrors.password}</Text>
-                        )}
-                    </View>
-
-                    <Pressable
-                        style={[styles.button, isLoginLoading && styles.buttonDisabled]}
-                        onPress={onSubmit}
-                        disabled={isLoginLoading}
-                    >
-                        <Text style={styles.buttonText}>{isLoginLoading ? 'Loading...' : 'Login'}</Text>
-                    </Pressable>
-
-                    <View style={styles.footer}>
-                        <Text style={styles.footerText}>Belum punya akun? </Text>
-                        <Pressable onPress={() => router.push('/(auth)/register')}>
-                            <Text style={styles.footerLink}>Daftar sekarang</Text>
+                        <Pressable onPress={() => setShowPassword(!showPassword)}>
+                            <Text style={styles.showText}>
+                                {showPassword ? <Ionicons name="eye" size={20} color="#10b981" /> : <Ionicons name="eye-off" size={20} color="#10b981" />}
+                            </Text>
                         </Pressable>
                     </View>
+                    {(fieldErrors?.password) && (
+                        <Text style={styles.fieldError}>{fieldErrors.password}</Text>
+                    )}
                 </View>
-            </ScrollView>
 
-        </KeyboardAvoidingView>
+                <Pressable
+                    style={({ pressed }) => [styles.button, isLoginLoading && styles.buttonDisabled, pressed && styles.buttonPressed]}
+                    onPress={onSubmit}
+                    disabled={isLoginLoading}
+                >
+                    <Text style={styles.buttonText}>{isLoginLoading ? 'Loading...' : 'Login'}</Text>
+                </Pressable>
+
+                <View style={styles.footer}>
+                    <Text style={styles.footerText}>Belum punya akun? </Text>
+                    <Pressable onPress={() => router.push('/(auth)/register')}>
+                        <Text style={styles.footerLink}>Daftar sekarang</Text>
+                    </Pressable>
+                </View>
+            </View>
+
+        </KeyboardAwareScrollView>
     )
 }
 
@@ -200,5 +210,21 @@ const styles = StyleSheet.create({
         color: '#10b981',
         fontSize: 14,
         fontWeight: '600',
+    },
+    buttonPressed: {
+        backgroundColor: '#0d9488',
+        opacity: 0.9
+    },
+    generalError: {
+        backgroundColor: '#fff5f5',
+        borderRadius: 8,
+        padding: 12,
+        borderWidth: 1,
+        borderColor: '#ffcccc',
+    },
+    generalErrorText: {
+        color: '#ff4444',
+        fontSize: 13,
+        textAlign: 'center',
     },
 });

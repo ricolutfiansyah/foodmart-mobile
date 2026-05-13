@@ -14,6 +14,7 @@ export interface AuthPayload {
 
 export interface AuthResponse {
     accessToken: string;
+    refreshToken: string;
     user: User;
 }
 
@@ -25,4 +26,4 @@ export type LogoutResponse = ApiResponse<void>;
 
 export type GetMeResponse = ApiResponse<User>;
 
-export type RefreshResponse = ApiResponse<Pick<AuthResponse, 'accessToken'>>;
+export type RefreshResponse = ApiResponse<Pick<AuthResponse, 'accessToken' | 'refreshToken'>>;

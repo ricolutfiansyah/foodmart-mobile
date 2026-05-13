@@ -1,5 +1,7 @@
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 
 export default function OrderScreen() {
-    return <Text>Order</Text>
+    return <View>
+        <Text>Order</Text>
+    </View>
 }

@@ -1,7 +1,7 @@
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { BASE_URL } from "../constants/config";
-import { RefreshResponse } from "../types/auth";
+import type { RefreshResponse } from "../types/auth";
 
 declare module 'axios' {
     interface InternalAxiosRequestConfig {
@@ -25,7 +25,8 @@ const api = axios.create({
 
 api.interceptors.request.use(
     async (config) => {
-        const token = await SecureStore.getItemAsync('accessToken');
+        const { useAuthStore } = require('@/src/store/authStore');
+        const token = useAuthStore.getState().accessToken;
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -62,6 +63,7 @@ api.interceptors.response.use(
         const originalRequest = error.config;
 
         if (error.response?.status === 401 && !AUTH_SKIP_URLS.some((url) => originalRequest.url?.includes(url)) && !originalRequest._retry) {
+            console.log("Token expired! Memulai proses refresh...");
             if (isRefreshing) {
                 return new Promise((resolve, reject) => {
                     failedQueue.push({ resolve, reject })
@@ -77,11 +79,13 @@ api.interceptors.response.use(
             isRefreshing = true;
 
             try {
-                const { data } = await axios.post<RefreshResponse>(REFRESH_URL, {}, { withCredentials: true });
+                const oldRefreshToken = await SecureStore.getItemAsync('refreshToken');
+                const { data } = await axios.post<RefreshResponse>(REFRESH_URL, { refreshToken: oldRefreshToken }, { withCredentials: true });
                 const newAccessToken = data.data.accessToken;
+                const newRefreshToken = data.data.refreshToken;
                 if (!newAccessToken) throw new Error('No access token in response');
 
-                useAuthStore.getState().setAccessToken(newAccessToken);
+                useAuthStore.getState().setTokens(newAccessToken, newRefreshToken);
 
                 processQueue(null, newAccessToken);
                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;

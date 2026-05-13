@@ -5,6 +5,7 @@ import Toast from "react-native-toast-message";
 import { useAuthStore } from "../store/authStore";
 import type { AuthPayload } from "../types/auth";
 import { ApiAxiosError, getErrorMessage } from "../types/api";
+import * as SecureStore from "expo-secure-store";
 
 export const useAuth = () => {
     const router = useRouter();
@@ -12,15 +13,15 @@ export const useAuth = () => {
     const loginMutation = useMutation({
         mutationFn: (payload: AuthPayload) => authService.login(payload),
         onSuccess: ({ data }) => {
-            useAuthStore.getState().login(data.accessToken, data.user);
+            useAuthStore.getState().login(data.accessToken, data.refreshToken, data.user);
             router.replace("/(tabs)/home");
         },
         onError: (error: ApiAxiosError) => {
-            if (error.response?.status === 400 && error.response?.data?.errors) {
+            if (error.response?.status === 400 || error.response?.status === 401) {
                 return;
             }
             Toast.show({
-                type: 'info',
+                type: 'error',
                 text1: getErrorMessage(error)
             });
         }
@@ -36,20 +37,20 @@ export const useAuth = () => {
             router.replace('/');
         },
         onError: (error: ApiAxiosError) => {
-            if (error.response?.status === 400 && error.response?.data?.errors) {
+            if (error.response?.status === 400 || error.response?.status === 401) {
                 return;
             }
             Toast.show({
-                type: 'info',
+                type: 'error',
                 text1: getErrorMessage(error)
             });
         }
     });
 
     const logoutMutation = useMutation({
-        mutationFn: () => authService.logout(),
-        onSuccess: () => {
-            useAuthStore.getState().logout();
+        mutationFn: async () => authService.logout(await SecureStore.getItemAsync('refreshToken') || ''),
+        onSuccess: async () => {
+            await useAuthStore.getState().logout();
             router.replace("/");
         },
         onError: () => {
@@ -72,6 +73,6 @@ export const useAuth = () => {
         handleLogout: logoutMutation.mutate,
         isLogoutLoading: logoutMutation.isPending,
 
-    }
-}
+    };
+};
 

@@ -1,1 +1,1 @@
-export const BASE_URL = 'https://blaming-reversing-attribute.ngrok-free.dev/api/v1';
+export const BASE_URL = 'https://thousands-miniature-static-dude.trycloudflare.com/api/v1';
