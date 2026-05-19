@@ -23,9 +23,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     isLoading: true,
 
     setTokens: async (accessToken, refreshToken) => {
+        set({ accessToken, isAuthenticated: true });
         await SecureStore.setItemAsync('accessToken', accessToken);
         await SecureStore.setItemAsync('refreshToken', refreshToken);
-        set({ accessToken, isAuthenticated: true });
     },
 
     login: async (accessToken, refreshToken, user) => {
@@ -48,7 +48,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             const savedUser = await AsyncStorage.getItem('user');
             const user = savedUser ? JSON.parse(savedUser) : null;
 
-            if (!refreshToken) return;
+            if (!refreshToken) {
+                get().logout();
+                return;
+            }
 
             if (accessToken && !isTokenExpired(accessToken)) {
                 set({ accessToken, isAuthenticated: true, user });
@@ -59,7 +62,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             await get().setTokens(data.accessToken, data.refreshToken);
             set({ user });
         } catch (error) {
-            get().logout();
+            await get().logout();
+            console.warn("Auth init warning:", (error as Error).message);
         } finally {
             set({ isLoading: false });
         }

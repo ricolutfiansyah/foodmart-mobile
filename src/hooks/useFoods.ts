@@ -1,14 +1,16 @@
 import { foodService } from "../services/foodService";
-import { useQuery } from "@tanstack/react-query";
-import { ApiAxiosError, getErrorMessage } from "../types/api";
-import Toast from "react-native-toast-message";
-import { useRouter } from "expo-router";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import type { GetAllFoodsParams } from "../types/food";
 
-export const useFoods = (params?: { search?: string, categoryId?: string }) => {
-    return useQuery({
+export const useFoods = (params?: GetAllFoodsParams) => {
+    return useInfiniteQuery({
         queryKey: ['foods', params],
-        queryFn: () => foodService.getAllFoods(params),
+        queryFn: ({ pageParam }) => foodService.getAllFoods({ ...params, page: pageParam }),
         staleTime: 2 * 60 * 1000,
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => {
+            return lastPage.meta?.hasNextPage ? lastPage.meta.currentPage + 1 : undefined;
+        }
     });
 }
 

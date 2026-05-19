@@ -1,6 +1,7 @@
 import api from "./api";
 import type { Food } from "../types/food";
 import type { ApiResponse } from "../types/api";
+import type { GetAllFoodsParams } from "../types/food";
 
 const FOODS_ENDPOINTS = {
     GET_ALL: '/foods',
@@ -11,7 +12,7 @@ const FOODS_ENDPOINTS = {
 } as const
 
 export const foodService = {
-    getAllFoods: async (params?: { search?: string, categoryId?: string }) => {
+    getAllFoods: async (params?: GetAllFoodsParams) => {
         const { data } = await api.get<ApiResponse<Food[]>>(FOODS_ENDPOINTS.GET_ALL, { params });
         return data;
     },

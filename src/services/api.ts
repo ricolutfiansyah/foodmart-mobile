@@ -63,7 +63,6 @@ api.interceptors.response.use(
         const originalRequest = error.config;
 
         if (error.response?.status === 401 && !AUTH_SKIP_URLS.some((url) => originalRequest.url?.includes(url)) && !originalRequest._retry) {
-            console.log("Token expired! Memulai proses refresh...");
             if (isRefreshing) {
                 return new Promise((resolve, reject) => {
                     failedQueue.push({ resolve, reject })
@@ -85,7 +84,7 @@ api.interceptors.response.use(
                 const newRefreshToken = data.data.refreshToken;
                 if (!newAccessToken) throw new Error('No access token in response');
 
-                useAuthStore.getState().setTokens(newAccessToken, newRefreshToken);
+                await useAuthStore.getState().setTokens(newAccessToken, newRefreshToken);
 
                 processQueue(null, newAccessToken);
                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;

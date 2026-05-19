@@ -1,6 +1,5 @@
 import { Tabs } from "expo-router";
-import { Text } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
 
 export default function TabLayout() {
   return (
@@ -24,11 +23,16 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="product"
+        options={{
+          title: "Product",
+          tabBarIcon: ({ color }) => <Ionicons name="fast-food" size={24} color={color} />,
+        }} />
+      <Tabs.Screen
         name="order"
         options={{
-          href: null,
           title: "Order",
-          tabBarIcon: ({ color }) => <Text>📦</Text>,
+          tabBarIcon: ({ color }) => <Ionicons name="list" size={24} color={color} />,
         }}
       />
       <Tabs.Screen

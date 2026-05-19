@@ -12,3 +12,9 @@ export interface Food {
         name: string;
     };
 }
+
+export interface GetAllFoodsParams {
+    search?: string,
+    categoryId?: string,
+    page?: number,
+}

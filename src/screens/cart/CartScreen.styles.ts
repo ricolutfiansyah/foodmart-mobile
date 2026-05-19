@@ -1,0 +1,191 @@
+import { StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#f8fafc',
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 18,
+        paddingVertical: 16,
+        backgroundColor: '#fff',
+        borderBottomWidth: 1,
+        borderBottomColor: '#f1f5f9',
+    },
+    backButton: {
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 12,
+        backgroundColor: '#f1f5f9',
+    },
+    clearButton: {
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    headerTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#1e293b',
+    },
+    listContent: {
+        padding: 18,
+        gap: 16,
+        flexGrow: 1,
+    },
+    cartItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        padding: 12,
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: '#f1f5f9',
+    },
+    itemImageContainer: {
+        width: 64,
+        height: 64,
+        backgroundColor: '#f8fafc',
+        borderRadius: 12,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 12,
+        overflow: 'hidden',
+    },
+    itemImage: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover',
+    },
+    itemEmoji: {
+        fontSize: 32,
+    },
+    itemDetails: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    itemName: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: '#1e293b',
+        marginBottom: 4,
+    },
+    itemCategory: {
+        fontSize: 12,
+        color: '#94a3b8',
+        marginBottom: 6,
+    },
+    itemPrice: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: '#10b981',
+    },
+    quantityContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#f8fafc',
+        borderRadius: 12,
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+    },
+    quantityButton: {
+        padding: 4,
+    },
+    quantityText: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: '#1e293b',
+        marginHorizontal: 12,
+    },
+    summaryContainer: {
+        backgroundColor: '#fff',
+        padding: 24,
+        borderTopLeftRadius: 24,
+        borderTopRightRadius: 24,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -4 },
+        shadowOpacity: 0.05,
+        shadowRadius: 12,
+        elevation: 10,
+    },
+    summaryRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 12,
+    },
+    summaryLabel: {
+        fontSize: 14,
+        color: '#64748b',
+    },
+    summaryValue: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: '#1e293b',
+    },
+    totalRow: {
+        marginTop: 8,
+        paddingTop: 16,
+        borderTopWidth: 1,
+        borderTopColor: '#f1f5f9',
+        marginBottom: 20,
+    },
+    totalLabel: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#1e293b',
+    },
+    totalValue: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#10b981',
+    },
+    checkoutButton: {
+        backgroundColor: '#10b981',
+        paddingVertical: 16,
+        borderRadius: 16,
+        alignItems: 'center',
+    },
+    checkoutButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: 85
+    },
+    emptyTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#1e293b',
+        marginTop: 20,
+    },
+    emptySubtitle: {
+        fontSize: 14,
+        color: '#64748b',
+        textAlign: 'center',
+        marginTop: 8,
+        paddingHorizontal: 40,
+        lineHeight: 20,
+    },
+    exploreButton: {
+        marginTop: 30,
+        backgroundColor: '#10b981',
+        paddingHorizontal: 24,
+        paddingVertical: 12,
+        borderRadius: 12,
+    },
+    exploreButtonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 15,
+    }
+});

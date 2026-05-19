@@ -7,7 +7,19 @@ import * as SplashScreen from 'expo-splash-screen';
 
 SplashScreen.preventAutoHideAsync();
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: (failureCount, error: any) => {
+        if (error?.response?.status === 401) return false;
+        return failureCount < 3;
+      },
+    },
+    mutations: {
+      retry: false,
+    },
+  },
+});
 
 export default function RootLayout() {
   const initAuth = useAuthStore((state) => state.initAuth);
@@ -29,15 +41,8 @@ export default function RootLayout() {
         headerShown: false,
         contentStyle: { backgroundColor: '#f8fafc' }
       }}>
-        <Stack.Screen name="index" />
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(tabs)" />
-        <Stack.Screen
-          name="cart"
-          options={{
-            animation: 'slide_from_right'
-          }}
-        />
       </Stack>
       <Toast />
     </QueryClientProvider>

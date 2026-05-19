@@ -1,6 +1,21 @@
+import { jwtDecode } from "jwt-decode";
+
+interface JwtPayload {
+    exp: number;
+}
+
 export const isTokenExpired = (token: string) => {
     if (!token) return true;
 
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return Date.now() >= payload.exp * 1000;
+    try {
+        const decoded = jwtDecode<JwtPayload>(token);
+        if (!decoded) return true;
+
+        const currentTime = Math.floor(new Date().getTime() / 1000);
+
+        return currentTime >= decoded.exp;
+    } catch (error) {
+        console.error("Token decode error:", error);
+        return true;
+    }
 };
